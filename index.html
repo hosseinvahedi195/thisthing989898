@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoCentipede - AI Automation & Consultation Services</title>
+    <link rel="icon" type="image/png" href="images/logo_transparent.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #00f5ff;
+            --secondary: #ff00ea;
+            --dark: #0a0a0f;
+            --darker: #050507;
+            --light: #ffffff;
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: var(--darker);
+            color: var(--light);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Animated background */
+        .bg-animation {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            background: linear-gradient(135deg, #0a0a0f 0%, #1a0033 100%);
+            overflow: hidden;
+        }
+
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            background: radial-gradient(circle, var(--primary) 0%, transparent 70%);
+            opacity: 0.05;
+            animation: rotate 30s linear infinite;
+        }
+
+        .bg-animation::after {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            bottom: -50%;
+            right: -50%;
+            background: radial-gradient(circle, var(--secondary) 0%, transparent 70%);
+            opacity: 0.05;
+            animation: rotate 30s linear infinite reverse;
+        }
+
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            transition: all 0.3s ease;
+        }
+
+        nav.scrolled {
+            background: rgba(10, 10, 15, 0.95);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                filter: drop-shadow(0 0 10px rgba(0, 245, 255, 0.5));
+            }
+
+            to {
+                filter: drop-shadow(0 0 20px rgba(255, 0, 234, 0.5));
+            }
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--light);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6rem 2rem 4rem;
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            text-align: center;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+            animation: slideUp 1s ease-out;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, var(--primary), var(--secondary), var(--primary));
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradient-shift 3s ease infinite;
+        }
+
+        @keyframes gradient-shift {
+
+            0%,
+            100% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2.5rem;
+            opacity: 0.9;
+            animation: slideUp 1s ease-out 0.2s both;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1.2rem 3rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--dark);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            animation: slideUp 1s ease-out 0.4s both;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .cta-button:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 40px rgba(0, 245, 255, 0.3);
+        }
+
+        /* Value Proposition Section */
+        .value-prop {
+            padding: 5rem 2rem;
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--glass-border);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .value-prop-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .value-prop h2 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, var(--light), var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .value-prop-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .value-item {
+            text-align: left;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .value-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 245, 255, 0.1);
+            border-color: var(--primary);
+        }
+
+        .value-item-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        .value-item h3 {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .value-item p {
+            font-size: 1.1rem;
+            opacity: 0.85;
+            line-height: 1.6;
+        }
+
+        /* Blog Section */
+        .blog {
+            padding: 5rem 2rem;
+            background: var(--darker);
+        }
+
+        .blog-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .blog h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .blog-card {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .blog-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+        }
+
+        .blog-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(45deg, #1a1a2e, #16213e);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.2);
+            font-size: 3rem;
+        }
+
+        .blog-content {
+            padding: 1.5rem;
+        }
+
+        .blog-date {
+            font-size: 0.9rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .blog-title {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--light);
+        }
+
+        .blog-snippet {
+            font-size: 0.95rem;
+            opacity: 0.7;
+            margin-bottom: 1.5rem;
+        }
+
+        .read-more {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .read-more:hover {
+            text-decoration: underline;
+        }
+
+
+        .value-icon {
+            font-size: 5rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        .value-text {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .value-text h3 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .value-text p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            line-height: 1.8;
+        }
+
+        /* Services Section */
+        .services {
+            padding: 5rem 2rem;
+        }
+
+        .services-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .services h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .service-card {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, transparent, rgba(0, 245, 255, 0.1), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s;
+        }
+
+        .service-card:hover::before {
+            transform: translateX(100%);
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary);
+            box-shadow: 0 20px 40px rgba(0, 245, 255, 0.2);
+        }
+
+        .service-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        .service-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .service-card p {
+            opacity: 0.9;
+            line-height: 1.7;
+        }
+
+        /* Tools Section */
+        .tools {
+            padding: 5rem 2rem;
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--glass-border);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .tools-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .tools h2 {
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .tool-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            transition: all 0.3s ease;
+            padding: 1.5rem;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .tool-item:hover {
+            transform: scale(1.1);
+            background: rgba(0, 245, 255, 0.1);
+        }
+
+        .tool-icon {
+            width: 80px;
+            height: 80px;
+            background: transparent;
+            /*linear-gradient(135deg, var(--primary), var(--secondary));*/
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--dark);
+            transition: all 0.3s ease;
+        }
+
+        .tool-item:hover .tool-icon {
+            box-shadow: 0 10px 30px rgba(0, 245, 255, 0.4);
+        }
+
+        .tool-name {
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+
+        .tool-logo {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+
+        /* Contact Section */
+        .contact {
+            padding: 5rem 2rem;
+        }
+
+        .contact-container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .contact h2 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .contact-info {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 3rem;
+            margin-top: 2rem;
+        }
+
+        .contact-button {
+            display: inline-block;
+            margin: 1rem;
+            padding: 1rem 2.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--dark);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .contact-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(0, 245, 255, 0.3);
+        }
+
+        /* Footer */
+        footer {
+            padding: 2rem;
+            text-align: center;
+            background: var(--darker);
+            border-top: 1px solid var(--glass-border);
+        }
+
+        footer p {
+            opacity: 0.7;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .value-prop-content {
+                flex-direction: column;
+                gap: 2rem;
+            }
+
+            .tools-grid {
+                grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+                gap: 1.5rem;
+            }
+
+            .tool-icon {
+                width: 60px;
+                height: 60px;
+                font-size: 1.5rem;
+            }
+        }
+
+        /* Scroll animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-animation"></div>
+
+    <nav id="navbar">
+        <div class="nav-container">
+            <div class="logo" style="display: flex; align-items: center; gap: 12px;">
+                <img src="images/logo_transparent.png" alt="AutoCentipede.io" style="height: 52px; width: auto;">
+                <span>AutoCentipede.io</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#value">Value</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#tools">Tools</a></li>
+                <li><a href="#blog">Blog</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li>
+                    <a href="https://calendly.com/hoss-vahedi/30min" target="_blank" class="nav-cta" style="
+                        background: linear-gradient(135deg, var(--primary), var(--secondary));
+                        color: var(--dark);
+                        padding: 0.5rem 1.5rem;
+                        border-radius: 25px;
+                        font-weight: bold;
+                        text-decoration: none;
+                        transition: all 0.3s ease;
+                    ">Book Consultation</a>
+                    <style>
+                        .nav-links a.nav-cta::after {
+                            display: none;
+                        }
+
+                        .nav-links a.nav-cta:hover {
+                            transform: translateY(-2px);
+                            box-shadow: 0 5px 15px rgba(0, 245, 255, 0.3);
+                        }
+                    </style>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <img src="images/mainLOGOnew3.svg" alt="AutoCentipede.io"
+                style="max-width: 500px; height: auto; margin-bottom: 1rem; animation: slideUp 1s ease-out;">
+            <h1>Transform Your Business with <span class="gradient-text">AI Automation</span></h1>
+            <p>Expert AI consultation services for web scraping, lead generation, and intelligent chatbots.</p>
+            <a href="https://calendly.com/hoss-vahedi/30min" target="_blank" class="cta-button">Book Your Free Systems
+                Audit</a>
+        </div>
+    </section>
+
+    <section id="value" class="value-prop">
+        <div class="value-prop-container">
+            <h2>Our Unique Value Proposition</h2>
+            <div class="value-prop-grid">
+                <div class="value-item fade-in">
+                    <span class="value-item-icon">⚡</span>
+                    <h3>Zero Hassle Scaling</h3>
+                    <p>We remove the technical bottlenecks slowing you down. Our systems work silently in the
+                        background, allowing you to scale your operations without adding headcount or complexity.</p>
+                </div>
+                <div class="value-item fade-in">
+                    <span class="value-item-icon">🔌</span>
+                    <h3>Seamless Integration</h3>
+                    <p>No need to replace your current software. Our solutions integrate directly into your existing
+                        ecosystem, enhancing your current tools rather than replacing them.</p>
+                </div>
+                <div class="value-item fade-in">
+                    <span class="value-item-icon">🔮</span>
+                    <h3>Minimal to No Code</h3>
+                    <p>Forget complex codebases that are hard to maintain. We build robust, low-code systems that are
+                        easy to manage, understand, and adapt as your business evolves.</p>
+                </div>
+                <div class="value-item fade-in">
+                    <span class="value-item-icon">🚀</span>
+                    <h3>Set It Once, Use It Forever</h3>
+                    <p>Our solutions are permanent upgrades to your operational capability. They work 24/7, scale
+                        effortlessly, and deliver consistent value from day one.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="services" class="services">
+        <div class="services-container">
+            <h2 class="gradient-text">Our Services</h2>
+            <div class="services-grid">
+                <div class="service-card fade-in">
+                    <span class="service-icon">🔍</span>
+                    <h3>Web Scraping Solutions</h3>
+                    <p>Advanced data extraction for venture capital firms and market research. Automate competitor
+                        analysis, pricing intelligence, and lead discovery with precision and scale.</p>
+                </div>
+                <div class="service-card fade-in">
+                    <span class="service-icon">🎯</span>
+                    <h3>Lead Generation Systems</h3>
+                    <p>Intelligent lead generation for service businesses. Build automated pipelines that identify,
+                        qualify, and engage prospects while you focus on closing deals.</p>
+                </div>
+                <div class="service-card fade-in">
+                    <span class="service-icon">💬</span>
+                    <h3>AI Chatbot Development</h3>
+                    <p>Custom AI agents for customer service that understand context, handle complex queries, and
+                        provide 24/7 support while reducing operational costs by up to 70%.</p>
+                </div>
+                <div class="service-card fade-in">
+                    <span class="service-icon">⚡</span>
+                    <h3>Workflow Automation</h3>
+                    <p>Connect your tools and automate repetitive tasks. From CRM updates to data synchronization, we
+                        build systems that eliminate manual work.</p>
+                </div>
+                <div class="service-card fade-in">
+                    <span class="service-icon">📊</span>
+                    <h3>Data Integration</h3>
+                    <p>Seamlessly connect disparate data sources and create unified dashboards that provide real-time
+                        insights for better decision-making.</p>
+                </div>
+                <div class="service-card fade-in">
+                    <span class="service-icon">🔧</span>
+                    <h3>Custom AI Solutions</h3>
+                    <p>Tailored artificial intelligence implementations designed specifically for your unique business
+                        challenges and opportunities.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="tools" class="tools">
+        <div class="tools-container">
+            <h2 class="gradient-text">Our Technology Stack</h2>
+            <p style="font-size: 1.2rem; opacity: 0.9; margin-bottom: 2rem;">We leverage cutting-edge tools to deliver
+                powerful automation solutions</p>
+            <div class="tools-grid">
+                <div class="tool-item fade-in">
+                    <div class="tool-icon">
+                        <img src="images/airtable.png" class="tool-logo">
+                    </div>
+                </div>
+                <div class="tool-item fade-in">
+                    <div class="tool-icon">
+                        <img src="images/make.png" class="tool-logo">
+                    </div>
+                </div>
+                <div class="tool-item fade-in">
+                    <div class="tool-icon">
+                        <img src="images/parsehub.png" class="tool-logo">
+                    </div>
+                </div>
+                <div class="tool-item fade-in">
+                    <div class="tool-icon">
+                        <img src="images/twilio.png" class="tool-logo">
+                    </div>
+                </div>
+                <div class="tool-item fade-in">
+                    <div class="tool-icon">
+                        <img src="images/stackAI.png" class="tool-logo">
+                    </div>
+                </div>
+                <div class="tool-item fade-in">
+                    <div class="tool-icon">
+                        <img src="images/hubspot.png" class="tool-logo">
+                    </div>
+                </div>
+                <div class="tool-item fade-in">
+                    <div class="tool-icon">
+                        <img src="images/openAI.png" class="tool-logo">
+                    </div>
+                </div>
+                <div class="tool-item fade-in">
+                    <div class="tool-icon">
+                        <img src="images/bardeen.png" class="tool-logo">
+                    </div>
+                </div>
+                <div class="tool-item fade-in">
+                    <div class="tool-icon">
+                        <img src="images/n8n.png" class="tool-logo">
+                    </div>
+                </div>
+                <div class="tool-item fade-in">
+                    <div class="tool-icon">
+                        <img src="https://github.com/VapiAI.png" class="tool-logo" alt="VAPI.ai">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="blog" class="blog">
+        <div class="blog-container">
+            <h2 class="gradient-text">Latest Insights</h2>
+            <div class="blog-grid">
+                <div class="blog-card fade-in">
+                    <div class="blog-image">📝</div>
+                    <div class="blog-content">
+                        <span class="blog-date">Dec 21, 2025</span>
+                        <h3 class="blog-title">The Future of AI Automation in 2026</h3>
+                        <p class="blog-snippet">Why "AI-Powered" will stop being a feature and become the standard
+                            electricity of business.</p>
+                        <a href="blog/future-of-ai-automation-2026.html" class="read-more">Read Article →</a>
+                    </div>
+                </div>
+                <div class="blog-card fade-in">
+                    <div class="blog-image">🤖</div>
+                    <div class="blog-content">
+                        <span class="blog-date">Dec 21, 2025</span>
+                        <h3 class="blog-title">Why Low-Code Solutions Scale Better</h3>
+                        <p class="blog-snippet">Discover why modern businesses are shifting towards low-code integration
+                            platforms for faster iteration and reduced technical debt.</p>
+                        <a href="blog/why-low-code-scales.html" class="read-more">Read Article →</a>
+                    </div>
+                </div>
+                <div class="blog-card fade-in">
+                    <div class="blog-image">💡</div>
+                    <div class="blog-content">
+                        <span class="blog-date">Dec 21, 2025</span>
+                        <h3 class="blog-title">5 Signs You Need Systems Automation</h3>
+                        <p class="blog-snippet">Are your manual processes holding you back? Learn the key indicators
+                            that suggest it's time to upgrade your operational infrastructure.</p>
+                        <a href="blog/5-signs-you-need-automation.html" class="read-more">Read Article →</a>
+                    </div>
+                </div>
+                <div class="blog-card fade-in">
+                    <div class="blog-image">🔒</div>
+                    <div class="blog-content">
+                        <span class="blog-date">Dec 23, 2025</span>
+                        <h3 class="blog-title">Protecting Client Data Privacy</h3>
+                        <p class="blog-snippet">Understanding HIPAA, PIPEDA, and FIPPA regulations, plus practical
+                            solutions for protecting client data through on-premise hosting.</p>
+                        <a href="blog/protecting-client-data-privacy.html" class="read-more">Read Article →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="contact">
+        <div class="contact-container">
+            <h2 class="gradient-text">Ready to Automate?</h2>
+            <p style="font-size: 1.2rem; opacity: 0.9;">Let's discuss how AI automation can transform your business
+                operations</p>
+            <div class="contact-info fade-in">
+                <h3 style="margin-bottom: 1.5rem; color: var(--primary);">Get Your Free Consultation</h3>
+                <p style="margin-bottom: 2rem;">Fill out our brief form to tell us about your business needs, and we'll
+                    be in touch to schedule your free consultation.</p>
+                <a href="https://docs.google.com/forms/placeholder" target="_blank" class="contact-button">Fill Out
+                    Form</a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 AutoCentipede.io. Empowering businesses through intelligent automation.</p>
+    </footer>
+
+    <script>
+        // Navbar scroll effect
+        window.addEventListener('scroll', function () {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Fade in animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function (entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Add stagger effect to tool items
+        const toolItems = document.querySelectorAll('.tool-item');
+        toolItems.forEach((item, index) => {
+            item.style.animationDelay = `${index * 0.1}s`;
+        });
+
+        // Add stagger effect to service cards
+        const serviceCards = document.querySelectorAll('.service-card');
+        serviceCards.forEach((card, index) => {
+            card.style.animationDelay = `${index * 0.15}s`;
+        });
+    </script>
+</body>
+
+</html>
