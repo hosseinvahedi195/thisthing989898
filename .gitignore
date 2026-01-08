@@ -6,3 +6,10 @@ token.json
 __pycache__/
 *.pyc
 research_results.json
+
+# Automation folders and scripts (local only)
+directives/
+execution/
+AGENTS.md
+research_blogs.py
+
