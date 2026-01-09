@@ -979,9 +979,7 @@
                 intelligent.</p>
 
             <div class="contact-form-container fade-in">
-                <form id="contactForm"
-                    action="https://docs.google.com/forms/d/e/1FAIpQLSfANwEiUI-WlnwS0reBbWsJNmh0_JlNLPbEjW0JOxVmzy6ikw/viewform"
-                    target="_blank">
+                <form id="contactForm" action="#">
                     <div class="form-grid">
                         <div class="form-group">
                             <label for="name">Name</label>
@@ -1071,6 +1069,38 @@
         const serviceCards = document.querySelectorAll('.service-card');
         serviceCards.forEach((card, index) => {
             card.style.animationDelay = `${index * 0.15}s`;
+        });
+
+        // AJAX Form Submission
+        document.getElementById('contactForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const form = this;
+            const btn = form.querySelector('.submit-button');
+            const originalText = btn.innerText;
+
+            btn.innerText = 'Sending...';
+            btn.disabled = true;
+
+            const formData = new FormData(form);
+            const actionUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSfANwEiUI-WlnwS0reBbWsJNmh0_JlNLPbEjW0JOxVmzy6ikw/formResponse';
+
+            // Google Forms requires field data to be sent as part of the URL or body in a specific format
+            // Fetch with no-cors mode works for silent submission
+            fetch(actionUrl, {
+                method: 'POST',
+                body: formData,
+                mode: 'no-cors'
+            }).then(() => {
+                btn.innerText = 'Success! We\'ll be in touch.';
+                btn.style.background = 'var(--primary)';
+                btn.style.color = 'var(--dark)';
+                form.reset();
+            }).catch(err => {
+                console.error('Error!', err);
+                btn.innerText = 'Error. Please try again.';
+                btn.disabled = false;
+                setTimeout(() => { btn.innerText = originalText; }, 3000);
+            });
         });
     </script>
 </body>
