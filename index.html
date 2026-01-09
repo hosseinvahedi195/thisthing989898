@@ -583,6 +583,7 @@
         /* Contact Section */
         .contact {
             padding: 5rem 2rem;
+            background: var(--darker);
         }
 
         .contact-container {
@@ -596,30 +597,90 @@
             margin-bottom: 2rem;
         }
 
-        .contact-info {
+        .contact-form-container {
             background: var(--glass);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(20px);
             border: 1px solid var(--glass-border);
             border-radius: 20px;
             padding: 3rem;
-            margin-top: 2rem;
+            margin-top: 3rem;
+            text-align: left;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
         }
 
-        .contact-button {
-            display: inline-block;
-            margin: 1rem;
-            padding: 1rem 2.5rem;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: var(--dark);
-            text-decoration: none;
-            border-radius: 50px;
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        .form-group label {
+            font-size: 0.9rem;
+            color: var(--primary);
             font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            padding: 1rem;
+            color: var(--light);
+            font-family: inherit;
             transition: all 0.3s ease;
         }
 
-        .contact-button:hover {
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 15px rgba(0, 245, 255, 0.2);
+        }
+
+        .submit-button {
+            width: 100%;
+            padding: 1.2rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--dark);
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .submit-button:hover {
             transform: translateY(-3px);
-            box-shadow: 0 15px 30px rgba(0, 245, 255, 0.3);
+            box-shadow: 0 10px 25px rgba(0, 245, 255, 0.4);
+        }
+
+        @media (max-width: 600px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full-width {
+                grid-column: span 1;
+            }
         }
 
         /* Footer */
@@ -914,14 +975,40 @@
     <section id="contact" class="contact">
         <div class="contact-container">
             <h2 class="gradient-text">Ready to Automate?</h2>
-            <p style="font-size: 1.2rem; opacity: 0.9;">Let's discuss how AI automation can transform your business
-                operations</p>
-            <div class="contact-info fade-in">
-                <h3 style="margin-bottom: 1.5rem; color: var(--primary);">Get Your Free Consultation</h3>
-                <p style="margin-bottom: 2rem;">Fill out our brief form to tell us about your business needs, and we'll
-                    be in touch to schedule your free consultation.</p>
-                <a href="https://docs.google.com/forms/placeholder" target="_blank" class="contact-button">Fill Out
-                    Form</a>
+            <p style="font-size: 1.2rem; opacity: 0.9;">Tell us about your business needs and let's build something
+                intelligent.</p>
+
+            <div class="contact-form-container fade-in">
+                <form id="contactForm" action="https://docs.google.com/forms/d/e/FILL_IN_YOUR_FORM_ID_HERE/viewform"
+                    target="_blank">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input type="text" id="name" name="entry.FILL_ID" placeholder="Your Name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="entry.FILL_ID" placeholder="Email Address" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="business">Business Name</label>
+                            <input type="text" id="business" name="entry.FILL_ID" placeholder="Your Company">
+                        </div>
+                        <div class="form-group">
+                            <label for="service">Interested In</label>
+                            <input type="text" id="service" placeholder="Web Scraping, Chatbots, etc.">
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="message">Your Inquiry</label>
+                            <textarea id="message" name="entry.FILL_ID" rows="5"
+                                placeholder="Tell us about your goals..." required></textarea>
+                        </div>
+                    </div>
+                    <button type="submit" class="submit-button">Submit Inquiry</button>
+                    <p style="text-align: center; font-size: 0.8rem; opacity: 0.5; margin-top: 1.5rem;">
+                        Note: Clicking submit will take you to our Google Form to confirm your details.
+                    </p>
+                </form>
             </div>
         </div>
     </section>
